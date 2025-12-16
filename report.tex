@@ -1,0 +1,280 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------- Encoding & language ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% ---------- Geometry & typography ----------
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{microtype}
+\usepackage{setspace}
+\setstretch{1.08}
+
+% ---------- Graphics, tables, math ----------
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+
+% ---------- Code Listing Style ----------
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+% ---------- Links & refs ----------
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalize,nameinlink]{cleveref}
+
+% ---------- Bibliography (IEEE style via biblatex) ----------
+% Commented out as no references are currently used
+% \usepackage[style=ieee,sorting=nyt,maxbibnames=6,doi=false,isbn=false,url=true]{biblatex}
+% \addbibresource{refs.bib}
+
+% ---------- TOC depth (adjust if needed) ----------
+\setcounter{tocdepth}{2}
+
+\begin{document}
+
+% =========================================================
+%                 FRONT PAGE
+% =========================================================
+\begin{titlepage}
+  \begin{center}
+  \thispagestyle{empty}
+  \vspace*{2cm}
+  {\LARGE \textbf{Lab Report:}}\\[6pt]
+  {\Large \textit{Housing Price Estimation using Linear Regression}}\\[18pt]
+
+\vspace{8cm}
+
+% Note: Ensure HHlogo.jpg is in the directory
+\includegraphics[width=95px]{HHlogo.jpg}
+
+\vspace{3cm}
+  
+  {\large
+  Kabir
+  \\
+  Maths Lab
+  \\
+  \today
+  }
+  \end{center}  
+  \vfill
+\end{titlepage}
+
+% =========================================================
+%                 TABLE OF CONTENTS
+% =========================================================
+\thispagestyle{empty}
+\pagenumbering{roman} % optional: roman for front matter
+\tableofcontents
+\clearpage
+
+% =========================================================
+%                 MAIN CONTENT
+% =========================================================
+\pagenumbering{arabic}
+\begin{raggedright}
+
+% ---- Abstract ----
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+
+This report presents a method for predicting housing prices based on various attributes such as crime rate, number of rooms, and accessibility to highways. Using a dataset of 506 instances, we implemented a linear regression model using the Normal Equation method. The model achieves a Root Mean Squared Error (RMSE) of approximately 4.91, demonstrating the effectiveness of the approach while highlighting limitations related to linear assumptions and outliers.
+
+\newpage
+% ---- Introduction ----
+\section{Introduction}
+
+The goal of this project is to predict the market price of houses based on various attributes. The market price ($y$) of any house depends on many factors ($x_1, x_2, \dots, x_N$) including location, view, surrounding, etc. As a more adequate price is set, the smoother (and fairer) the selling process goes. Therefore, the goal is to predict/set the price of the house in accordance with those parameters.
+
+The dataset for this problem contains 506 instances with 13 attributes each, including numerical and categorical data such as per capita crime rate (CRIM), average number of rooms (RM), and nitric oxides concentration (NOX).
+
+To solve this, we employ the **Normal Equation** method for linear regression. The Normal Equation provides an analytical solution to the least squares problem, minimizing the cost function $J(\beta) = ||X\beta - y||^2$. The solution is given by:
+\[ \beta = (X^T X)^{-1} X^T y \]
+This method yields the exact optimal coefficients that minimize the residual sum of squares on the training data.
+
+% ---- Method ----
+\section{Method}
+
+We implemented the solution in Python using the \texttt{numpy} library for matrix operations and \texttt{pandas} for data handling. The implementation follows these steps:
+
+\subsection{Data Processing}
+The dataset is loaded from \texttt{Problem2\_Dataset.csv}. We extract the features and the target variable (MEDV). The data is then split into a training set (80\%) and a testing set (20\%). An intercept term (a column of ones) is added to the feature matrix to account for the bias term $a_0$.
+
+\subsection{Model Training}
+We compute the coefficients $\beta$ using the Normal Equation:
+\[ \beta = \text{np.linalg.inv}(X_{train}^T X_{train}) @ (X_{train}^T y_{train}) \]
+
+\subsection{Evaluation}
+We predict the prices on the test set using $y_{pred} = X_{test} \beta$ and calculate the Root Mean Squared Error (RMSE). To ensure the stability of our results, we repeat the training and testing process 100 times with random splits and report the mean and standard deviation of the RMSE and coefficients.
+
+% ---- Results ----
+\section{Results}
+
+\subsection{Performance Statistics}
+After running the model 100 times, we obtained the following average performance metrics:
+\begin{itemize}
+    \item \textbf{Mean RMSE}: $\approx 4.91$
+    \item \textbf{RMSE Standard Deviation}: $\approx 0.53$
+    \item \textbf{Mean Absolute Error}: $\approx 3.49$
+\end{itemize}
+
+\subsection{Visualizations}
+
+\subsubsection{RMSE Distribution}
+The histogram below shows the distribution of RMSE values over 100 runs, indicating the variance in model performance due to data splitting.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ne_rmse_histogram.png}
+    \caption{RMSE Distribution over 100 runs}
+\end{figure}
+
+\subsubsection{Coefficients}
+The plot below shows the mean value of each coefficient along with its standard deviation. Features like \texttt{RM} (number of rooms) and \texttt{NOX} (nitric oxides) show significant weights.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ne_coefficients.png}
+    \caption{Feature Coefficients with Standard Deviation}
+\end{figure}
+
+\subsubsection{Best Model Fit}
+The scatter plot below compares the Predicted vs Actual prices for the best performing run (lowest RMSE).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{ne_best_model_fit.png}
+    \caption{Predicted vs Actual Prices (Best Model)}
+\end{figure}
+
+% ---- Discussion ----
+\section{Discussion}
+
+Using the normal equation is mathematically correct, but it is often a poor practical choice. Below is a precise, engineering-oriented explanation of why it can be problematic, and when other methods should be used instead.
+
+\subsection{Why the Normal Equation is Problematic}
+
+\subsubsection{Matrix Inversion is Expensive}
+The Normal Equation requires computing $\beta = (X^T X)^{-1} X^T y$. If $p$ is the number of features:
+\begin{itemize}
+    \item Computing $X^T X$ takes $O(np^2)$.
+    \item Inverting the $p \times p$ matrix takes $O(p^3)$.
+\end{itemize}
+This works for small $p$, but becomes infeasible for large feature sets (e.g., $p = 10^4$).
+
+\subsubsection{Numerical Instability (Ill-conditioning)}
+If features are highly correlated, poorly scaled, or nearly linearly dependent, then $X^T X$ becomes ill-conditioned.
+\begin{itemize}
+    \item Small numerical errors cause large errors in $\beta$.
+    \item Inversion amplifies floating-point noise.
+\end{itemize}
+This is extremely common in real-world data.
+
+\subsubsection{Fails Completely when $X^T X$ is Singular}
+The inverse does not exist when features are linearly dependent or when $p > n$ (more features than samples). This is typical in high-dimensional ML (text, image, genomic features). In these cases, the Normal Equation simply cannot be used.
+
+\subsubsection{Memory Constraints}
+You must store the entire $X$ and $X^T X$ in memory. This blocks streaming data, online learning, and large datasets that do not fit in RAM.
+
+\subsubsection{No Regularization by Default}
+The Normal Equation minimizes training error only, which leads to overfitting. Regularization requires modifying the equation (Ridge/Lasso), which complicates inversion further.
+
+\subsection{When the Normal Equation is Acceptable}
+Use it only when \textbf{ALL} of the following hold:
+\begin{itemize}
+    \item \textbf{Small dataset}: Inversion is cheap.
+    \item \textbf{Low feature count ($p < 1000$)}: $O(p^3)$ is manageable.
+    \item \textbf{No multicollinearity}: Ensures stable inversion.
+    \item \textbf{Well-scaled features}: Better conditioning.
+    \item \textbf{Educational / theoretical work}: Clear closed-form solution.
+\end{itemize}
+Example: teaching linear regression, quick prototypes, or sanity checks.
+
+\subsection{Better Alternatives}
+
+\subsubsection{A. SVD / Pseudoinverse}
+Formula: $\beta = X^+ y$, where $X^+$ is the Moore–Penrose pseudoinverse via SVD.
+\begin{itemize}
+    \item \textbf{Use when}: $X^T X$ is singular/ill-conditioned, $p > n$, or numerical stability is needed.
+    \item \textbf{Why better}: Handles rank deficiency, avoids explicit inversion of $X^T X$, industry-standard approach.
+\end{itemize}
+
+\subsubsection{B. QR Decomposition}
+Formula: $X = QR$, solve $R\beta = Q^T y$.
+\begin{itemize}
+    \item \textbf{Use when}: Medium-sized problems, need good numerical stability, batch least squares.
+    \item \textbf{Why better}: Avoids forming $X^T X$, more stable than Normal Equation.
+\end{itemize}
+
+\subsubsection{C. Gradient Descent / SGD}
+Iterative update: $\beta_{k+1} = \beta_k - \eta \nabla J$.
+\begin{itemize}
+    \item \textbf{Use when}: Large $n$, streaming data, online learning, memory constraints.
+    \item \textbf{Why better}: No matrix inversion, scales to millions of samples, works easily with regularization.
+\end{itemize}
+
+\subsubsection{D. Ridge Regression}
+Formula: $(X^T X + \lambda I)\beta = X^T y$.
+\begin{itemize}
+    \item \textbf{Use when}: Multicollinearity exists, overfitting is a concern.
+    \item \textbf{Why better}: Guarantees invertibility, improves generalization.
+\end{itemize}
+
+\subsection{Practical Decision Table}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Situation} & \textbf{Recommended Method} \\
+\hline
+Small, clean data & Normal Equation \\
+Correlated features & Ridge / SVD \\
+$p > n$ & SVD \\
+Large dataset & SGD \\
+Streaming data & SGD \\
+Production ML & SGD / SVD \\
+Numerical robustness required & QR / SVD \\
+\hline
+\end{tabular}
+\caption{Method Selection Guide}
+\end{table}
+
+\subsection{Takeaway}
+The Normal Equation is mathematically elegant but computationally fragile; in real systems it is replaced by SVD, QR, or gradient-based methods depending on scale, conditioning, and deployment constraints.
+
+% ---- Conclusions ----
+\section{Conclusion}
+We successfully implemented a linear regression model using the Normal Equation to estimate housing prices. The model provides a stable baseline for prediction with an average RMSE of 4.91. While effective, further improvements in handling outliers and non-linearities could enhance predictive performance.
+
+\end{raggedright}
+
+% ---- Appendix ----
+\newpage
+\section{Appendix}
+\subsection{part2.py Code}
+\lstinputlisting{part2.py}
+
+% ---- References ----
+% \printbibliography
+
+\end{document}
