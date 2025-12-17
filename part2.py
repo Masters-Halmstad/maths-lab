@@ -37,7 +37,7 @@ def run_once(data):
     train_y = y[indices[:split]]
     test_y = y[indices[split:]]
 
-    # Add intercept
+    # Add intercept/bais term
     train_x = np.hstack([np.ones((train_x.shape[0], 1)), train_x])
     test_x = np.hstack([np.ones((test_x.shape[0], 1)), test_x])
     # Normal equation
