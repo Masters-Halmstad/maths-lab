@@ -13,13 +13,13 @@ Linear regression models the relationship between features (X) and target (y) as
 
 ```mermaid
 flowchart TD
-    A[Load Dataset CSV] --\u003e B[Extract Features X \u0026 Target y]
-    B --\u003e C[Random Split 80/20]
-    C --\u003e D[Add Intercept Column]
-    D --\u003e E[Apply Normal Equation]
-    E --\u003e F[Compute Beta Coefficients]
-    F --\u003e G[Make Predictions]
-    G --\u003e H[Calculate Errors \u0026 RMSE]
+    A[Load Dataset CSV] --> B[Extract Features X \u0026 Target y]
+    B --> C[Random Split 80/20]
+    C --> D[Add Intercept Column]
+    D --> E[Apply Normal Equation]
+    E --> F[Compute Beta Coefficients]
+    F --> G[Make Predictions]
+    G --> H[Calculate Errors \u0026 RMSE]
     
     style A fill:#e1f5ff
     style E fill:#fff4e1
@@ -144,11 +144,11 @@ y_pred = test_x @ beta
 
 ```mermaid
 graph TD
-    A[Predictions y_pred] --\u003e B[Calculate Errors]
-    B --\u003e C[Absolute Errors]
-    B --\u003e D[Squared Errors]
-    D --\u003e E[Root Mean Squared Error RMSE]
-    C --\u003e F[Mean Absolute Error MAE]
+    A[Predictions y_pred] --> B[Calculate Errors]
+    B --> C[Absolute Errors]
+    B --> D[Squared Errors]
+    D --> E[Root Mean Squared Error RMSE]
+    C --> F[Mean Absolute Error MAE]
     
     style E fill:#ffebee
     style F fill:#e8f5e9
@@ -203,16 +203,16 @@ sequenceDiagram
     participant RunOnce
     participant NumpyLA
     
-    Main-\u003e\u003eLoadData: Load CSV
-    LoadData-\u003e\u003eMain: Return DataFrame
-    Main-\u003e\u003eRunOnce: Train and Test
-    RunOnce-\u003e\u003eRunOnce: Split data
-    RunOnce-\u003e\u003eRunOnce: Add intercept
-    RunOnce-\u003e\u003eNumpyLA: Compute (XᵀX)⁻¹
-    NumpyLA-\u003e\u003eRunOnce: Return inverse
-    RunOnce-\u003e\u003eRunOnce: Calculate β
-    RunOnce-\u003e\u003eRunOnce: Make predictions
-    RunOnce-\u003e\u003eMain: Return results
+    Main->>LoadData: Load CSV
+    LoadData->>Main: Return DataFrame
+    Main->>RunOnce: Train and Test
+    RunOnce->>RunOnce: Split data
+    RunOnce->>RunOnce: Add intercept
+    RunOnce->>NumpyLA: Compute (XᵀX)⁻¹
+    NumpyLA->>RunOnce: Return inverse
+    RunOnce->>RunOnce: Calculate β
+    RunOnce->>RunOnce: Make predictions
+    RunOnce->>Main: Return results
 ```
 
 ---
@@ -292,8 +292,8 @@ classDiagram
         +β coefficients
     }
     
-    DataLoader --\u003e ModelTrainer
-    ModelTrainer --\u003e NormalEquation
+    DataLoader --> ModelTrainer
+    ModelTrainer --> NormalEquation
 ```
 
 ---

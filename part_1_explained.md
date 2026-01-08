@@ -13,16 +13,16 @@ Eigenfaces are the eigenvectors of the covariance matrix of face images. They re
 
 ```mermaid
 flowchart TD
-    A[Load Face Images] --\u003e B[Convert to Grayscale]
-    B --\u003e C[Flatten Images to Vectors]
-    C --\u003e D[Calculate Mean Face]
-    D --\u003e E[Center Data by Subtracting Mean]
-    E --\u003e F[Compute Covariance Matrix]
-    F --\u003e G[Calculate Eigenvalues \u0026 Eigenvectors]
-    G --\u003e H[Sort Eigenfaces by Eigenvalue]
-    H --\u003e I[Select Top K Eigenfaces]
-    I --\u003e J[Project Faces to Lower Dimension]
-    J --\u003e K[Face Recognition/Reconstruction]
+    A[Load Face Images] --> B[Convert to Grayscale]
+    B --> C[Flatten Images to Vectors]
+    C --> D[Calculate Mean Face]
+    D --> E[Center Data by Subtracting Mean]
+    E --> F[Compute Covariance Matrix]
+    F --> G[Calculate Eigenvalues \u0026 Eigenvectors]
+    G --> H[Sort Eigenfaces by Eigenvalue]
+    H --> I[Select Top K Eigenfaces]
+    I --> J[Project Faces to Lower Dimension]
+    J --> K[Face Recognition/Reconstruction]
 ```
 
 ---
@@ -82,8 +82,8 @@ where:
 
 ```mermaid
 graph LR
-    A[Original Face Space\n10,304 dimensions] --PCA--\u003e B[Eigenface Space\nK dimensions]
-    B --Reconstruction--\u003e C[Reconstructed Face]
+    A[Original Face Space\n10,304 dimensions] --PCA--> B[Eigenface Space\nK dimensions]
+    B --Reconstruction--> C[Reconstructed Face]
     
     style A fill:#e1f5ff
     style B fill:#fff4e1
@@ -113,10 +113,10 @@ graph LR
 
 ```mermaid
 flowchart LR
-    A[New Face] --\u003e B[Subtract Mean]
-    B --\u003e C[Project onto Eigenfaces]
-    C --\u003e D[Compare with Database]
-    D --\u003e E[Find Closest Match]
+    A[New Face] --> B[Subtract Mean]
+    B --> C[Project onto Eigenfaces]
+    C --> D[Compare with Database]
+    D --> E[Find Closest Match]
     
     style A fill:#ffebee
     style E fill:#c8e6c9
@@ -153,14 +153,14 @@ sequenceDiagram
     participant Numpy
     participant PCA
     
-    User-\u003e\u003eLoadImages: Specify image set
-    LoadImages-\u003e\u003eNumpy: Convert to arrays
-    Numpy-\u003e\u003ePCA: Flatten images
-    PCA-\u003e\u003ePCA: Compute mean face
-    PCA-\u003e\u003ePCA: Center data
-    PCA-\u003e\u003ePCA: Compute covariance
-    PCA-\u003e\u003ePCA: Calculate eigenvectors
-    PCA-\u003e\u003eUser: Return eigenfaces
+    User->>LoadImages: Specify image set
+    LoadImages->>Numpy: Convert to arrays
+    Numpy->>PCA: Flatten images
+    PCA->>PCA: Compute mean face
+    PCA->>PCA: Center data
+    PCA->>PCA: Compute covariance
+    PCA->>PCA: Calculate eigenvectors
+    PCA->>User: Return eigenfaces
 ```
 
 ---
