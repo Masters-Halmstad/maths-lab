@@ -41,10 +41,6 @@ def main(data, runs=100):
     all_rmses = np.array(all_rmses)
     rmse_mean = np.mean(all_rmses)
     rmse_std = np.std(all_rmses)
-
-    # 95% prediction interval
-    lower_95 = np.percentile(all_abs_errors, 2.5)
-    upper_95 = np.percentile(all_abs_errors, 97.5)
     
     # --- Plotting ---
     
@@ -55,18 +51,6 @@ def main(data, runs=100):
     plt.xlabel('RMSE')
     plt.ylabel('Frequency')
     plt.savefig('ne_rmse_histogram.png')
-    plt.close()
-    
-    # 2. Coefficients with Error Bars
-    feature_names = ['Intercept'] + FEATURES
-    plt.figure(figsize=(12, 6))
-    plt.errorbar(feature_names, mean_beta, yerr=std_beta, fmt='o', capsize=5, color='darkred')
-    plt.title('Mean Coefficients with Std Dev (Normal Equation)')
-    plt.xlabel('Features')
-    plt.ylabel('Coefficient Value')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.savefig('ne_coefficients.png')
     plt.close()
     
     # 3. Best Model Fit
@@ -93,7 +77,6 @@ def main(data, runs=100):
         "std_error": std_error,
         "rmse_mean": rmse_mean,
         "rmse_std": rmse_std,
-        "95pi": (lower_95, upper_95),
         "best_rmse": best_rmse
     }
 
@@ -101,7 +84,7 @@ def main(data, runs=100):
 if __name__ == "__main__":
     main_data = load_data()
     if main_data is not None:
-        stats = main(main_data, runs=100)
+        stats = main(main_data, runs=10000)
 
         print("-" * 50)
         print("Normal Equation Results (100 runs):")
@@ -112,4 +95,3 @@ if __name__ == "__main__":
         print("RMSE Mean:", stats["rmse_mean"])
         print("RMSE Std Dev:", stats["rmse_std"])
         print("Best RMSE:", stats["best_rmse"])
-        print("95% Prediction Interval of Errors:", stats["95pi"])
